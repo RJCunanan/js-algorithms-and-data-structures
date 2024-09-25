@@ -75,3 +75,63 @@ function charCount(str) {
 
 console.log(charCount("hello"));
 console.log(charCount("Hi there!"))
+
+
+
+// New, refactored solution:
+function charCount2(str) {
+    var obj = {};
+    for (var i = 0; i < str.length; i++) {
+        if (/[a-z0-9]/.test(char)) {
+            if (obj[char] > 0) {
+                obj[char]++;
+            } else {
+                obj[char] = 1;
+            }
+        }
+    }
+    return obj;
+}
+
+
+// Even more optimized solution:
+function charCount3(str) {
+    var obj = {};
+    for (var char of str) {
+        char = char.toLowerCase();
+        // Note: regex performance can actually vary depending on what you are doing
+        // and what browser is handling the regex
+        if (/[a-z0-9]/.test(char)) {
+            obj[char] = ++obj[char] || 1;
+        }
+    }
+    return obj;
+}
+
+
+// Another even more optimized solution using an additional newly created function:
+function isAlphaNumeric(char) {
+    var code = char.charCodeAt(0);
+    // Note: Using numeric codes is actually 55% faster (more efficient)
+    // than using regex.
+    if (!(code > 47 && code < 58) &&    // numeric (0-9)
+        !(code > 64 && code < 91) &&    // upper alpha (A-Z)
+        !(code > 96 && code < 123)) {   // lower alpha (a-z)
+        return false;
+    }
+    return true;
+}
+
+function charCount4(str) {
+    var obj = {};
+    for (var char of str) {
+        if (isAlphaNumeric(char)) {
+            char = char.toLowerCase();
+            obj[char] = ++obj[char] || 1;
+        }
+    }
+    return obj;
+}
+
+
+console.log(charCount4("Hello WORLD hi!!!"));
